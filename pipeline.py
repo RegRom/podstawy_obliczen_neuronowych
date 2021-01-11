@@ -2,8 +2,8 @@
 
 import time
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
-from numpy.lib.npyio import genfromtxt
 from tabulate import tabulate
 from sklearn.datasets import make_classification
 from sklearn.preprocessing import MinMaxScaler  
@@ -21,7 +21,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 from elm import ELM
-from autoencoder import AutoencoderClassifier
+# from autoencoder import AutoencoderClassifier
 
 #Importy metod ekstrakcji
 from sklearn.decomposition import PCA
@@ -30,8 +30,7 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 #Importy metryk
 from sklearn.metrics import balanced_accuracy_score
-
-
+from sklearn.metrics import accuracy_score
 
 # %%
 # Wygenerowanie zbioru danych
@@ -49,8 +48,13 @@ from sklearn.metrics import balanced_accuracy_score
 
 # %%
 
-ex1data = genfromtxt('../n_features_1000_n')
+ex1data = np.genfromtxt('datasets\\5000_features_2_classes_balanced.csv', delimiter=',')
 
+# %%
+
+X = ex1data[:, :-1]
+y = ex1data[:, -1]
+print(X.shape)
 # %%
 # Skalowanie danych i transpozycja kolumny z etykietami
 
@@ -63,7 +67,7 @@ X_scaled = scaler.fit_transform(X)
 # %%
 #Wyodrębnianie zestawów cech i zapisanie do tablicy
 
-feature_sets = [100, 200, 300, 500, 1000]
+feature_sets = [100, 200, 300, 500, 1000, 2500]
 X_train_array = []
 
 for set_size in feature_sets:
@@ -72,6 +76,8 @@ for set_size in feature_sets:
     print(X_set.shape)
 
     X_train_array.append(X_set)
+
+X_train_array.append(X_scaled)
 
 # # %%
 # test Extreme Learning Machine
@@ -147,12 +153,12 @@ def make_experiments_without_extract(X, y):
         elm_pred = elm_clf.predict(X_test)
         elm_pred = (elm_pred > 0.5).astype(int)
 
-        svc_no_extract_scores.append(round(balanced_accuracy_score(svc_pred, y_test), 2))
-        knn_no_extract_scores.append(round(balanced_accuracy_score(knn_pred, y_test), 2))
-        gnb_no_extract_scores.append(round(balanced_accuracy_score(gnb_pred, y_test), 2))
-        dt_no_extract_scores.append(round(balanced_accuracy_score(dt_pred, y_test), 2)) 
-        mlp_no_extract_scores.append(round(balanced_accuracy_score(mlp_pred, y_test), 2))
-        elm_no_extract_scores.append(round(balanced_accuracy_score(elm_pred, y_test), 2))
+        svc_no_extract_scores.append(round(accuracy_score(svc_pred, y_test), 2))
+        knn_no_extract_scores.append(round(accuracy_score(knn_pred, y_test), 2))
+        gnb_no_extract_scores.append(round(accuracy_score(gnb_pred, y_test), 2))
+        dt_no_extract_scores.append(round(accuracy_score(dt_pred, y_test), 2)) 
+        mlp_no_extract_scores.append(round(accuracy_score(mlp_pred, y_test), 2))
+        elm_no_extract_scores.append(round(accuracy_score(elm_pred, y_test), 2))
     
     return [
         round(np.average(svc_no_extract_scores), 2),
@@ -204,12 +210,12 @@ def make_experiments_with_pca(X, y):
         elm_pred = (elm_pred > 0.5).astype(int)
 
 
-        svc_pca_scores.append(round(balanced_accuracy_score(svc_pred, y_test), 2))
-        knn_pca_scores.append(round(balanced_accuracy_score(knn_pred, y_test), 2))
-        gnb_pca_scores.append(round(balanced_accuracy_score(gnb_pred, y_test), 2))
-        dt_pca_scores.append(round(balanced_accuracy_score(dt_pred, y_test), 2)) 
-        mlp_pca_scores.append(round(balanced_accuracy_score(mlp_pred, y_test), 2)) 
-        elm_pca_scores.append(round(balanced_accuracy_score(elm_pred, y_test), 2)) 
+        svc_pca_scores.append(round(accuracy_score(svc_pred, y_test), 2))
+        knn_pca_scores.append(round(accuracy_score(knn_pred, y_test), 2))
+        gnb_pca_scores.append(round(accuracy_score(gnb_pred, y_test), 2))
+        dt_pca_scores.append(round(accuracy_score(dt_pred, y_test), 2)) 
+        mlp_pca_scores.append(round(accuracy_score(mlp_pred, y_test), 2)) 
+        elm_pca_scores.append(round(accuracy_score(elm_pred, y_test), 2)) 
 
     return [
         round(np.average(svc_pca_scores), 2),
@@ -273,12 +279,12 @@ def make_experiments_with_kpca(X, y):
         elm_pred = elm_clf.predict(X_test_kpca)
         elm_pred = (elm_pred > 0.5).astype(int)
 
-        svc_kpca_scores.append(round(balanced_accuracy_score(svc_pred, y_test), 2))
-        knn_kpca_scores.append(round(balanced_accuracy_score(knn_pred, y_test), 2))
-        gnb_kpca_scores.append(round(balanced_accuracy_score(gnb_pred, y_test), 2))
-        dt_kpca_scores.append(round(balanced_accuracy_score(dt_pred, y_test), 2)) 
-        mlp_kpca_scores.append(round(balanced_accuracy_score(mlp_pred, y_test), 2))
-        elm_kpca_scores.append(round(balanced_accuracy_score(elm_pred, y_test), 2)) 
+        svc_kpca_scores.append(round(accuracy_score(svc_pred, y_test), 2))
+        knn_kpca_scores.append(round(accuracy_score(knn_pred, y_test), 2))
+        gnb_kpca_scores.append(round(accuracy_score(gnb_pred, y_test), 2))
+        dt_kpca_scores.append(round(accuracy_score(dt_pred, y_test), 2)) 
+        mlp_kpca_scores.append(round(accuracy_score(mlp_pred, y_test), 2))
+        elm_kpca_scores.append(round(accuracy_score(elm_pred, y_test), 2)) 
 
     return [
         round(np.average(svc_kpca_scores), 2),
@@ -341,12 +347,12 @@ def make_experiments_with_lda(X, y):
         elm_pred = elm_clf.predict(X_test_lda)
         elm_pred = (elm_pred > 0.5).astype(int)
 
-        svc_lda_scores.append(round(balanced_accuracy_score(svc_pred, y_test), 2))
-        knn_lda_scores.append(round(balanced_accuracy_score(knn_pred, y_test), 2))
-        gnb_lda_scores.append(round(balanced_accuracy_score(gnb_pred, y_test), 2))
-        dt_lda_scores.append(round(balanced_accuracy_score(dt_pred, y_test), 2)) 
-        mlp_lda_scores.append(round(balanced_accuracy_score(mlp_pred, y_test), 2))
-        elm_lda_scores.append(round(balanced_accuracy_score(elm_pred, y_test), 2)) 
+        svc_lda_scores.append(round(accuracy_score(svc_pred, y_test), 2))
+        knn_lda_scores.append(round(accuracy_score(knn_pred, y_test), 2))
+        gnb_lda_scores.append(round(accuracy_score(gnb_pred, y_test), 2))
+        dt_lda_scores.append(round(accuracy_score(dt_pred, y_test), 2)) 
+        mlp_lda_scores.append(round(accuracy_score(mlp_pred, y_test), 2))
+        elm_lda_scores.append(round(accuracy_score(elm_pred, y_test), 2)) 
 
 
     return [
@@ -368,35 +374,87 @@ def make_experiment_1(X, y):
         kpca = make_experiments_with_kpca(X_train, y)
         lda = make_experiments_with_lda(X_train, y)
 
-        headers = ['Algorithm', 'SVC', 'kNN', 'GNB', 'DT', 'MLP', 'ELM']
+        feature_number = X_train.shape[1]
+
+        headers = ['Algorithm', 'SVC', 'kNN', 'GNB', 'DT', 'MLP', 'ELM', 'Średnio']
         scores_rows = [
-            ["-"] + no_extract,
-            ["PCA"] + pca,
-            ["kPCA"] + kpca,
-            ["LDA"] + lda
+            [feature_number] + no_extract + [round(np.average(no_extract), 2)],
+            ["PCA"] + pca + [round(np.average(pca), 2)],
+            ["kPCA"] + kpca + [round(np.average(kpca), 2)],
+            ["LDA"] + lda + [round(np.average(lda), 2)]
         ]
+
+        SVC_avg = round(np.average([no_extract[0], pca[0], kpca[0], lda[0]]), 2)
+        kNN_avg = round(np.average([no_extract[1], pca[1], kpca[1], lda[0]]), 2)
+        GNB_avg = round(np.average([no_extract[2], pca[2], kpca[2], lda[2]]), 2)
+        DT_avg = round(np.average([no_extract[3], pca[3], kpca[3], lda[3]]), 2)
+        MLP_avg = round(np.average([no_extract[4], pca[4], kpca[4], lda[4]]), 2)
+        ELM_avg = round(np.average([no_extract[5], pca[5], kpca[5], lda[5]]), 2)
+
+        scores_rows.append(["Average", SVC_avg, kNN_avg, GNB_avg, DT_avg, MLP_avg, ELM_avg])
 
         scores_table = tabulate(scores_rows, headers=headers, tablefmt="latex")
         print(scores_table)
+
+# %% Wykres algorytmów
+
+# Data
+df=pd.DataFrame({
+        'Features': [100, 200, 300, 500, 1000, 2500, 5000],
+        'SVC': [0.49 , 0.51, 0.48, 0.47 , 0.47 , 0.48 , 0.5 ], 
+        'kNN': [0.47 , 0.48 , 0.48 , 0.47 , 0.52 , 0.6  , 0.68 ], 
+        'GNB': [0.5, 0.54, 0.51 , 0.49 , 0.48 , 0.51 , 0.53 ], 
+        'DT': [0.45 , 0.49 , 0.5  , 0.49 , 0.52 , 0.52 , 0.49 ],
+        'MLP': [0.48 , 0.49 , 0.47 , 0.46 , 0.48 , 0.49 , 0.53 ],
+        'ELM': [0.48 , 0.5  , 0.5  , 0.54 , 0.5  , 0.53 , 0.49 ],
+    })
+
+fig, ax = plt.subplots(figsize=(12,8))
+# multiple line plot
+fig.suptitle('Średnia wartość metryki Accuracy algorytmów w zależności od liczby cech', fontsize=16)
+ax.set_xlabel('Liczba cech')
+ax.set_ylabel('Wartość Accuracy')
+plt.plot( 'Features', 'SVC', data=df, marker='o', color='blue', linestyle='dashed')
+plt.plot( 'Features', 'kNN', data=df, marker='o', color='olive', linewidth=2)
+plt.plot( 'Features', 'GNB', data=df, marker='o', color='orange', linewidth=2)
+plt.plot( 'Features', 'DT', data=df, marker='o', color='green', linestyle='dashed')
+plt.plot( 'Features', 'MLP', data=df, marker='o', color='black', linewidth=2, linestyle='dotted')
+plt.plot( 'Features', 'ELM', data=df, marker='o', color='red', linewidth=2, linestyle='dotted')
+plt.legend()
+locs, labels = plt.xticks()
+plt.xticks([100, 200, 300, 500, 1000, 2500, 5000], [100, 200, 300, 500, 1000, 2500, 5000], rotation='vertical')
+plt.savefig('algo_avg.svg')
+# %%
+# URUCHOMIENIE EKSPERYMENTU 1
+start = time.time()
+
+make_experiment_1(X,y)
+
+end = time.time()
+duration = end - start
+print(duration)
+
 # %%
 
-# make_experiment_1(X,y)
-# %%
-imbalance_ratios = [[0.33, 0.67], [0.25, 0.75], [0.2, 0.8], [0.1, 0.9], [0.05, 0.95]]
-imbalance_sets = []
+ex2data1 = np.genfromtxt('datasets\\1000_features_2_classes_balanced.csv', delimiter=',')
+ex2data2 = np.genfromtxt('datasets\\1000_features_2_classes_0.33_0.67.csv', delimiter=',')
+ex2data3 = np.genfromtxt('datasets\\1000_features_2_classes_0.25_0.75.csv', delimiter=',')
+ex2data4 = np.genfromtxt('datasets\\1000_features_2_classes_0.2_0.8.csv', delimiter=',')
+ex2data5 = np.genfromtxt('datasets\\1000_features_2_classes_0.1_0.9.csv', delimiter=',')
 
-def make_experiment_2(imbalance_ratios):
+
+
+# %%
+
+imbalanced_sets = [ex2data1, ex2data2, ex2data3, ex2data4, ex2data5]
+
+def make_experiment_2(sets):
     imbalance_scores = []
-    for ratio in imbalance_ratios:
-        X, y = make_classification(
-            n_features=100, 
-            n_redundant=20,
-            n_informative=70,
-            n_clusters_per_class=1,
-            n_samples=100,
-            weights=ratio
-            )
-        # imbalance_sets.append([X, y])
+
+    for feat_set in sets:
+        X = feat_set[:, :-1]
+        y = feat_set[:, -1]
+        print(X.shape)
         scores = make_experiments_without_extract(X, y)
         imbalance_scores.append(scores)
     
@@ -414,28 +472,30 @@ def make_experiment_2(imbalance_ratios):
 
 # %%
 
-# make_experiment_2(imbalance_ratios)
+make_experiment_2(imbalanced_sets)
+
 # %%
 
-imbalance_ratios = [[0.25, 0.25, 0.5], [0.2, 0.2, 0.6], [0.15, 0.15, 0.7], [0.1, 0.1, 0.8], [0.05, 0.05, 0.9]]
-imbalance_sets = []
+ex3data1 = np.genfromtxt('datasets\\1000_features_3_classes_balanced.csv', delimiter=',')
+ex3data2 = np.genfromtxt('datasets\\1000_features_3_classes_0.25_0.25_0.5.csv', delimiter=',')
+ex3data3 = np.genfromtxt('datasets\\1000_features_3_classes_0.2_0.2_0.6.csv', delimiter=',')
+ex3data4 = np.genfromtxt('datasets\\1000_features_3_classes_0.1_0.1_0.8.csv', delimiter=',')
+ex3data5 = np.genfromtxt('datasets\\1000_features_3_classes_0.05_0.05_0.9.csv', delimiter=',')
 
-def make_experiment_3(imbalance_ratios):
+imbalanced_sets = [ex3data1, ex3data2, ex3data3, ex3data4, ex3data5]
+
+# %%
+    
+def make_experiment_3(sets):
     imbalance_scores = []
-    for ratio in imbalance_ratios:
-        X, y = make_classification(
-            n_features=50, 
-            n_redundant=20,
-            n_informative=10,
-            n_clusters_per_class=1,
-            n_samples=3000,
-            weights=ratio,
-            n_classes=3
-            )
-        # imbalance_sets.append([X, y])
+
+    for feat_set in sets:
+        X = feat_set[:, :-1]
+        y = feat_set[:, -1]
+        print(X.shape)
         scores = make_experiments_without_extract(X, y)
         imbalance_scores.append(scores)
-    
+
     headers = ['Algorithm', 'SVC', 'kNN', 'GNB', 'DT', 'MLP', 'ELM']
     scores_rows = [
         ["1:1:1"] + imbalance_scores[0],
@@ -451,7 +511,7 @@ def make_experiment_3(imbalance_ratios):
 # %%
 start = time.time()
 
-make_experiment_3(imbalance_ratios)
+make_experiment_3(imbalanced_sets)
 
 end = time.time()
 duration = end - start

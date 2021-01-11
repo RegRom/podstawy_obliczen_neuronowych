@@ -7,7 +7,7 @@ import numpy as np
 from sklearn.datasets import make_classification
 from tqdm import tqdm
 
-N_SAMPLES = [1000]
+N_SAMPLES = [200]
 N_FEATURES = [1000]
 
 Dataset = collections.namedtuple("Dataset", ["X", "y", "name"])
@@ -76,6 +76,7 @@ def get_datasets():
             n_features=data_info["n_features"],
             n_informative=n_informative,
             n_redundant=n_redundant,
+            n_samples=N_SAMPLES[0],
             random_state=1410,
             weights=weights,
         )
