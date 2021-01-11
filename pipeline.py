@@ -1,8 +1,9 @@
 #%%
 
-from types import new_class
+import time
 import numpy as np
 import matplotlib.pyplot as plt
+from numpy.lib.npyio import genfromtxt
 from tabulate import tabulate
 from sklearn.datasets import make_classification
 from sklearn.preprocessing import MinMaxScaler  
@@ -35,16 +36,20 @@ from sklearn.metrics import balanced_accuracy_score
 # %%
 # Wygenerowanie zbioru danych
 
-X, y = make_classification(
-    n_features=1000, 
-    n_redundant=200,
-    n_informative=700,
-    n_clusters_per_class=1,
-    n_samples=300,
-    weights=[ 0.5, 0.5 ]
-    )
-print(X.shape)
-print(y.shape)
+# X, y = make_classification(
+#     n_features=1000, 
+#     n_redundant=200,
+#     n_informative=700,
+#     n_clusters_per_class=1,
+#     n_samples=1000,
+#     weights=[ 0.5, 0.5 ]
+#     )
+# print(X.shape)
+# print(y.shape)
+
+# %%
+
+ex1data = genfromtxt('../n_features_1000_n')
 
 # %%
 # Skalowanie danych i transpozycja kolumny z etykietami
@@ -375,7 +380,7 @@ def make_experiment_1(X, y):
         print(scores_table)
 # %%
 
-make_experiment_1(X,y)
+# make_experiment_1(X,y)
 # %%
 imbalance_ratios = [[0.33, 0.67], [0.25, 0.75], [0.2, 0.8], [0.1, 0.9], [0.05, 0.95]]
 imbalance_sets = []
@@ -397,11 +402,11 @@ def make_experiment_2(imbalance_ratios):
     
     headers = ['Algorithm', 'SVC', 'kNN', 'GNB', 'DT', 'MLP', 'ELM']
     scores_rows = [
-        ["1:2"] + imbalance_scores[0],
-        ["1:3"] + imbalance_scores[1],
-        ["1:4"] + imbalance_scores[2],
-        ["1:8"] + imbalance_scores[3],
-        ["1:19"] + imbalance_scores[4]
+        ["1:1"] + imbalance_scores[0],
+        ["1:2"] + imbalance_scores[1],
+        ["1:3"] + imbalance_scores[2],
+        ["1:4"] + imbalance_scores[3],
+        ["1:9"] + imbalance_scores[4]
     ]
 
     scores_table = tabulate(scores_rows, headers=headers, tablefmt="latex")
@@ -409,21 +414,21 @@ def make_experiment_2(imbalance_ratios):
 
 # %%
 
-make_experiment_2(imbalance_ratios)
+# make_experiment_2(imbalance_ratios)
 # %%
 
-imbalance_ratios = [[0.33, 0.67], [0.25, 0.75], [0.2, 0.8], [0.1, 0.9], [0.05, 0.95]]
+imbalance_ratios = [[0.25, 0.25, 0.5], [0.2, 0.2, 0.6], [0.15, 0.15, 0.7], [0.1, 0.1, 0.8], [0.05, 0.05, 0.9]]
 imbalance_sets = []
 
 def make_experiment_3(imbalance_ratios):
     imbalance_scores = []
     for ratio in imbalance_ratios:
         X, y = make_classification(
-            n_features=100, 
+            n_features=50, 
             n_redundant=20,
-            n_informative=70,
+            n_informative=10,
             n_clusters_per_class=1,
-            n_samples=100,
+            n_samples=3000,
             weights=ratio,
             n_classes=3
             )
@@ -433,16 +438,22 @@ def make_experiment_3(imbalance_ratios):
     
     headers = ['Algorithm', 'SVC', 'kNN', 'GNB', 'DT', 'MLP', 'ELM']
     scores_rows = [
-        ["1:2"] + imbalance_scores[0],
-        ["1:3"] + imbalance_scores[1],
-        ["1:4"] + imbalance_scores[2],
-        ["1:8"] + imbalance_scores[3],
-        ["1:19"] + imbalance_scores[4]
+        ["1:1:1"] + imbalance_scores[0],
+        ["1:1:2"] + imbalance_scores[1],
+        ["1:1:3"] + imbalance_scores[2],
+        ["1:1:8"] + imbalance_scores[3],
+        ["1:1:18"] + imbalance_scores[4]
     ]
 
     scores_table = tabulate(scores_rows, headers=headers, tablefmt="latex")
     print(scores_table)
 
 # %%
+start = time.time()
+
 make_experiment_3(imbalance_ratios)
+
+end = time.time()
+duration = end - start
+print(duration)
 # %%
